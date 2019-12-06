@@ -2,22 +2,20 @@
 
 const ctx = document.getElementById("canvas").getContext("2d");
 
-ctx.fillStyle = "rgb(123,23,43, 0.2)";
-ctx.fillRect(0, 0, 512, 512);
-
 const background_image = document.getElementById("background");
 const person_image = document.getElementById("person");
 
 const cell = 64;
-let x = 1;
+let x = 6;
 let y = 6;
 let person_x = () => cell * x;
 let person_y = () => cell * y - 5;
+
 const positions = {
-    Up: 4,
-    Down: 2,
     Left: 1,
+    Down: 2,
     Right: 3,
+    Up: 4,
 };
 
 const room = [
@@ -51,4 +49,39 @@ function loop() {
 }
 
 loop();
+
+function isWall() {
+    return room[y][x] === 5;
+}
+
+document.addEventListener("keydown", function (event) {
+    background();
+    switch (event.code) {
+        case "ArrowUp":
+            y--;
+            isWall() && y++;
+            person("Up");
+            break;
+        case "ArrowDown":
+            y++;
+            isWall() && y--;
+            person("Down");
+            break;
+        case "ArrowLeft":
+            x--;
+            isWall() && x++;
+            person("Left");
+            break;
+        case "ArrowRight":
+            x++;
+            isWall() && x--;
+            person("Right");
+            break;
+        default :
+            loop();
+            break;
+    }
+
+});
+
 
