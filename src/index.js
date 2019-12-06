@@ -10,6 +10,7 @@ let x = 6;
 let y = 6;
 let person_x = () => cell * x;
 let person_y = () => cell * y - 5;
+let currentDirection = "Up";
 
 const positions = {
     Left: 1,
@@ -39,6 +40,7 @@ function background() {
 }
 
 function person(direction) {
+    currentDirection = direction;
     ctx.drawImage(person_image, 0, cell * positions[direction], cell, cell,
         person_x(), person_y(), cell, cell);
 }
@@ -84,4 +86,34 @@ document.addEventListener("keydown", function (event) {
 
 });
 
+let idInterval;
 
+const autoMoveBtn = document.getElementById("start");
+const stopMoveBtn = document.getElementById("stop");
+
+stopMoveBtn.addEventListener("click", function () {
+    clearInterval(idInterval);
+});
+
+autoMoveBtn.addEventListener("click", function () {
+    clearInterval(idInterval);
+    idInterval = setInterval(() => {
+        let e = new Event("keydown");
+        e.code = `Arrow${currentDirection}`;
+        const Xbefore = x;
+        const Ybefore = y;
+        document.dispatchEvent(e)
+        if(Xbefore === x && Ybefore === y) {
+            let numDirection = positions[currentDirection] + 1;
+            if(numDirection === 5) {
+                numDirection = 1;
+            }
+            for(let key in positions) {
+                if(positions[key] === numDirection) {
+                    e.code = `Arrow${key}`
+                }
+            }
+            document.dispatchEvent(e);
+        }
+    }, 1000);
+});
